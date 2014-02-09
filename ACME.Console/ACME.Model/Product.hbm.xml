@@ -8,5 +8,6 @@
       <generator class="identity"/>
     </id>
     <property name="ProductName" length="50" />
+    <many-to-one class="UnitOfMeasure" name="UOM" column="UomKey" />
   </class>
 </hibernate-mapping>

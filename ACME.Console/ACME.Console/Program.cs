@@ -18,32 +18,35 @@ namespace ACME.Console
             System.Console.ReadKey();
         }
 
-        private static void SampleMethod(IRepository<Product, Int32?> productRepo)
+        private static void SampleMethod(IProductRepository productRepo)
         {
             WaitForInput("to rebuild schema Press any key...");
-
             SessionProvider.RebuildSchema();
-
             WaitForInput("schema rebuilt.");
 
-            //Create a Product
-            var pNew = new Product { ProductName = "Canned Salmon" };
-            productRepo.Save(pNew);
+            //Add some units of measure
+            var uomCan = new UnitOfMeasure { UomDescription = "Can" };
+            var uomBottle = new UnitOfMeasure { UomDescription = "Bottle" };
+            productRepo.SaveUOM(uomCan);
+            productRepo.SaveUOM(uomBottle);
+            WaitForInput("CREATED Unites of mesure");
 
-            WaitForInput("CREATED : 'Canned Salmon'");
+            //Create a Product
+            var pNew = new Product { ProductName = "Bottled Salmon", UOM = uomBottle };
+            productRepo.Save(pNew);
+            WaitForInput("CREATED : 'Salmon'");
 
             //Get a Product
             var pGet = productRepo.GetById(pNew.ProductId);
 
             //Update a Product
             pGet.ProductName = "Canned Tuna";
+            pGet.UOM = uomCan;
             productRepo.Save(pGet);
-
-            WaitForInput("UPDATED to : 'Canned Tuna'");
+            WaitForInput("UPDATED to : 'Tuna'");
 
             //Delete a Product
             productRepo.Delete(pNew);
-
             WaitForInput("End. Press any key...");
         }
     }

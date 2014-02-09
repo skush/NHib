@@ -5,7 +5,7 @@ using NHibernate;
 
 namespace ACME.Data
 {
-    public class ProductRepository : IRepository<Product, Int32?>
+    public class ProductRepository : IProductRepository
     {
         private static ISession GetSession()
         {
@@ -21,6 +21,18 @@ namespace ACME.Data
         }
 
         public void Save(Product saveObj)
+        {
+            using (var session = GetSession())
+            {
+                using (var trans = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(saveObj);
+                    trans.Commit();
+                }
+            }
+        }
+
+        public void SaveUOM(UnitOfMeasure saveObj)
         {
             using (var session = GetSession())
             {
